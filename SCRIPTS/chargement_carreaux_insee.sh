@@ -1,0 +1,1 @@
+raster2pgsql -t 256x256 -s 2154 -I -Y carreaux_200m.tif ref.insee_pop_2010_200m | psql
