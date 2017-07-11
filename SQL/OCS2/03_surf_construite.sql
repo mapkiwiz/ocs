@@ -42,3 +42,9 @@ parts AS (
 SELECT row_number() over() AS gid, removeHoles(geom, 500) as geom
 FROM parts
 WHERE ST_GeometryType(geom) = 'ST_Polygon';
+
+ALTER TABLE test.surf_construite
+ADD PRIMARY KEY (gid);
+
+CREATE INDEX surf_construite_geom_idx
+ON test.surf_construite USING GIST (geom);
