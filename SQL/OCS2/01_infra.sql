@@ -1,9 +1,10 @@
+SET search_path = test, ocs, public;
 
-CREATE TABLE test.surf_infra AS
+CREATE TABLE surf_infra AS
 WITH
 grid as (
     SELECT geom
-    FROM test.grid_ocs
+    FROM ocs.grid_ocs
     WHERE gid = 1
 ),
 route AS (
@@ -34,16 +35,16 @@ parts AS (
 SELECT row_number() over() as gid, geom
 FROM parts;
 
-CREATE TEMP TABLE surf_non_infra_t AS
+CREATE TABLE surf_non_infra_t AS
 WITH
 grid AS (
     SELECT geom
-    FROM test.grid_ocs
+    FROM ocs.grid_ocs
     WHERE gid = 1
 ),
 diff AS (
     SELECT st_difference((SELECT geom FROM grid), st_union(geom)) AS geom
-    FROM test.surf_infra
+    FROM surf_infra
     -- WHERE ...
 ),
 parts AS (
@@ -54,55 +55,7 @@ SELECT row_number() over() AS gid, geom
 FROM parts
 WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
-CREATE OR REPLACE FUNCTION SplitWithNetworks(ageom geometry)
-RETURNS SETOF geometry
-AS
-$func$
-DECLARE
-
-    ls geometry;
-    t geometry;
-
-BEGIN
-
-    t := ageom;
-
-    FOR ls IN
-        WITH
-        lines AS (
-            SELECT geom FROM bdt.bdt_route r
-            WHERE st_intersects(r.geom, ageom)
-                   AND r.nature NOT IN ('Sentier', 'Escalier', 'Chemin')
-            UNION ALL
-            SELECT geom FROM bdt.bdt_troncon_voie_ferree r
-            WHERE st_intersects(r.geom, ageom)
-            UNION ALL
-            SELECT geom FROM bdt.bdt_troncon_cours_eau r
-            WHERE st_intersects(r.geom, ageom)
-                  AND r.regime = 'Permanent'
-        )
-        SELECT (ST_Dump(geom)).geom
-        FROM lines
-    LOOP
-
-        t := ST_Split(t, ls);
-
-    END LOOP;
-
-    RETURN QUERY
-    WITH parts AS (
-        SELECT (ST_Dump(t)).geom
-    )
-    SELECT geom
-    FROM parts
-    WHERE ST_GeometryType(geom) = 'ST_Polygon';
-
-
-END
-$func$
-LANGUAGE plpgsql VOLATILE STRICT;
-
-CREATE TABLE test.surf_non_infra AS
+CREATE TABLE surf_non_infra AS
 WITH parts AS (
     SELECT SplitWithNetworks(geom) as geom
     FROM surf_non_infra_t
@@ -110,7 +63,7 @@ WITH parts AS (
 SELECT row_number() over() AS gid, geom
 FROM parts;
 
-ALTER TABLE test.surf_non_infra
+ALTER TABLE surf_non_infra
 ADD PRIMARY KEY (gid);
 
 CREATE INDEX surf_non_infra_geom_idx

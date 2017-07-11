@@ -1,8 +1,10 @@
-CREATE TABLE test.surf_arboriculture AS
+SET search_path = test, ocs, public;
+
+CREATE TABLE surf_arboriculture AS
 WITH
 grid AS (
     SELECT geom
-    FROM test.grid_ocs
+    FROM ocs.grid_ocs
     WHERE gid = 1
 ),
 prairie AS (
@@ -26,14 +28,14 @@ parts AS (
 SELECT row_number() over() AS gid, geom
 FROM parts;
 
-ALTER TABLE test.surf_arboriculture
+ALTER TABLE surf_arboriculture
 ADD PRIMARY KEY (gid);
 
-CREATE TABLE test.surf_arboriculture_t AS
+CREATE TABLE surf_arboriculture_t AS
 WITH
 intersection AS (
     SELECT a.gid, coalesce(st_intersection(a.geom, st_union(b.geom)), a.geom) AS geom
-    FROM test.surf_arboriculture a LEFT JOIN test.surf_ouverte b
+    FROM surf_arboriculture a LEFT JOIN surf_ouverte b
     ON st_intersects(a.geom, b.geom)
     GROUP BY a.gid
 ),
@@ -45,11 +47,11 @@ SELECT row_number() over() AS gid, geom
 FROM parts
 WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
-CREATE TABLE test.surf_arboriculture_snapped AS
+CREATE TABLE surf_arboriculture_snapped AS
 WITH
 snaps AS (
     SELECT SnapOnSurfOuverte(geom, 2500, 10) AS geom
-    FROM test.surf_arboriculture_t
+    FROM surf_arboriculture_t
 ),
 parts AS (
     SELECT (st_dump(geom)).geom

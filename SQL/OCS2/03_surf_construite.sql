@@ -1,8 +1,11 @@
-CREATE TABLE test.surf_construite AS
+SET search_path = test, ocs, public;
+
+
+CREATE TABLE surf_construite AS
 WITH
 grid AS (
     SELECT geom
-    FROM test.grid_ocs
+    FROM ocs.grid_ocs
     WHERE gid = 1
 ),
 bati AS (
@@ -43,8 +46,8 @@ SELECT row_number() over() AS gid, removeHoles(geom, 500) as geom
 FROM parts
 WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
-ALTER TABLE test.surf_construite
+ALTER TABLE surf_construite
 ADD PRIMARY KEY (gid);
 
 CREATE INDEX surf_construite_geom_idx
-ON test.surf_construite USING GIST (geom);
+ON surf_construite USING GIST (geom);

@@ -1,8 +1,10 @@
-CREATE TABLE test.surf_foret AS
+SET search_path = test, ocs, public;
+
+CREATE TABLE surf_foret AS
 WITH
 grid AS (
     SELECT geom
-    FROM test.grid_ocs
+    FROM ocs.grid_ocs
     WHERE gid = 1
 ),
 foret AS (
@@ -33,14 +35,14 @@ SELECT row_number() over() AS gid, geom
 FROM parts
 WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
-ALTER TABLE test.surf_foret
+ALTER TABLE surf_foret
 ADD PRIMARY KEY (gid);
 
-CREATE TABLE test.surf_foret_nino AS
+CREATE TABLE surf_foret_nino AS
 WITH
 intersection AS (
     SELECT a.gid, coalesce(st_intersection(a.geom, st_union(b.geom)), a.geom) AS geom
-    FROM test.surf_foret a LEFT JOIN test.surf_nino b
+    FROM surf_foret a LEFT JOIN surf_nino b
     ON st_intersects(a.geom, b.geom)
     GROUP BY a.gid
 ),
@@ -52,18 +54,18 @@ SELECT row_number() over() AS gid, geom
 FROM parts
 WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
--- CREATE TABLE test.surf_foret_nino AS
+-- CREATE TABLE surf_foret_nino AS
 -- WITH parts AS (
 --     SELECT SplitWithNetworks(geom) as geom
---     FROM test.surf_foret_nino_t
+--     FROM surf_foret_nino_t
 -- )      
 -- SELECT row_number() over() AS gid, geom
 -- FROM parts;
 
-CREATE TABLE test.surf_foret_snapped AS
+CREATE TABLE surf_foret_snapped AS
 WITH parts AS (
     SELECT SnapOnNino(geom, 2500, 5) AS geom
-    FROM test.surf_foret_nino
+    FROM surf_foret_nino
 )
 SELECT row_number() over() AS gid, geom
 FROM parts;
