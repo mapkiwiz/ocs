@@ -30,30 +30,40 @@ parts AS (
     FROM clip
 )
 SELECT row_number() over() AS gid, geom
-FROM parts;
+FROM parts
+WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
-CREATE TEMP TABLE surf_foret_non_infra_t AS
+ALTER TABLE test.surf_foret
+ADD PRIMARY KEY (gid);
+
+CREATE TABLE test.surf_foret_nino AS
 WITH
 intersection AS (
-    SELECT (st_dump(st_intersection(a.geom, b.geom))).geom
-    FROM test.surf_foret a LEFT JOIN test.surf_non_infra b
+    SELECT a.gid, coalesce(st_intersection(a.geom, st_union(b.geom)), a.geom) AS geom
+    FROM test.surf_foret a LEFT JOIN test.surf_nino b
     ON st_intersects(a.geom, b.geom)
+    GROUP BY a.gid
+),
+parts AS (
+    SELECT (st_dump(geom)).geom
+    FROM intersection
 )
 SELECT row_number() over() AS gid, geom
-FROM intersection;
+FROM parts
+WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
-CREATE TABLE test.surf_foret_non_infra AS
-WITH parts AS (
-    SELECT SplitWithNetworks(geom) as geom
-    FROM surf_foret_non_infra_t
-)      
-SELECT row_number() over() AS gid, geom
-FROM parts;
+-- CREATE TABLE test.surf_foret_nino AS
+-- WITH parts AS (
+--     SELECT SplitWithNetworks(geom) as geom
+--     FROM test.surf_foret_nino_t
+-- )      
+-- SELECT row_number() over() AS gid, geom
+-- FROM parts;
 
 CREATE TABLE test.surf_foret_snapped AS
 WITH parts AS (
-	SELECT SnapOnLineNonInfra(geom, 2500, 5) AS geom
-	FROM test.surf_foret_non_infra
+    SELECT SnapOnNino(geom, 2500, 5) AS geom
+    FROM test.surf_foret_nino
 )
 SELECT row_number() over() AS gid, geom
 FROM parts;

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION SnapOnLineNonInfra(ageom geometry, area_tolerance double precision, width_tolerance double precision)
+CREATE OR REPLACE FUNCTION SnapOnNino(ageom geometry, area_tolerance double precision, width_tolerance double precision)
 RETURNS geometry
 AS
 $func$
@@ -14,7 +14,7 @@ BEGIN
     WITH
     small_diff AS (
         SELECT (ST_Dump(ST_Difference(b.geom, ageom))).geom
-        FROM test.surf_non_infra b
+        FROM test.surf_nino b
         WHERE st_contains(b.geom, st_centroid(ageom))
     ),
     parts AS (
@@ -33,7 +33,7 @@ END
 $func$
 LANGUAGE plpgsql IMMUTABLE STRICT;
 
-CREATE OR REPLACE FUNCTION SnapOnLineNonInfra(area_tolerance double precision, width_tolerance double precision)
+CREATE OR REPLACE FUNCTION SnapOnNino(area_tolerance double precision, width_tolerance double precision)
 RETURNS SETOF geometry
 AS
 $func$
@@ -45,12 +45,12 @@ DECLARE
 
 BEGIN
 
-    SELECT count(*) FROM test.surf_construite_non_infra INTO num;
+    SELECT count(*) FROM test.surf_construite_nino INTO num;
     FOR i, ageom IN
-        SELECT row_number() over(), geom FROM test.surf_construite_non_infra
+        SELECT row_number() over(), geom FROM test.surf_construite_nino
     LOOP
 
-        RETURN NEXT SnapOnLineNonInfra(ageom, area_tolerance, width_tolerance);
+        RETURN NEXT SnapOnNino(ageom, area_tolerance, width_tolerance);
         IF i % 100 = 0
         THEN
             RAISE NOTICE 'Progress % %%', 100 * i / num;
@@ -62,11 +62,11 @@ END
 $func$
 LANGUAGE plpgsql IMMUTABLE STRICT;
 
-CREATE TABLE test.surf_construite_non_infra AS
+CREATE TABLE test.surf_construite_nino AS
 WITH
 intersection AS (
     SELECT (st_dump(st_intersection(a.geom, b.geom))).geom
-    FROM test.surf_construite a LEFT JOIN test.surf_non_infra b
+    FROM test.surf_construite a LEFT JOIN test.surf_nino b
     ON st_intersects(a.geom, b.geom)
 )
 SELECT row_number() over() AS gid, geom
@@ -75,7 +75,7 @@ FROM intersection;
 CREATE TABLE test.surf_construite_snapped AS
 WITH
 parts AS (
-    SELECT SnapOnLineNonInfra(2500, 5) as geom
+    SELECT SnapOnNino(2500, 5) as geom
 )
 SELECT row_number() over() AS gid, geom
 FROM parts;
