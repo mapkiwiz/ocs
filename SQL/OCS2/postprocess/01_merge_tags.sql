@@ -1,19 +1,10 @@
-CREATE TYPE ocs_nature AS ENUM (
-	'AUTRE/?', 
-	'AUTRE/NATURE', 
-	'AUTRE/BATI', 
-	'ARBO', 
-	'PRAIRIE', 
-	'CULTURES', 
-	'BATI', 
-	'FORET', 
-	'EAU',
-	'INFRA');
-
 CREATE TABLE test.ocsol_tags AS
 SELECT a.fid, b.gid, b.nature::ocs_nature
 FROM test.ocsol_cleaned a LEFT JOIN
      test.ocsol b ON st_contains(b.geom, st_pointonsurface(a.geom));
+
+ALTER TABLE test.ocsol_cleaned
+ADD COLUMN nature ocs_nature;
 
 WITH
 tags AS (

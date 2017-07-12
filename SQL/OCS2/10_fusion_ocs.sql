@@ -31,26 +31,31 @@ WITH parts AS (
 SELECT row_number() over() AS gid, nature, geom
 FROM parts;
 
+CREATE VIEW ocsol_ AS
+SELECT 0 AS gid, geom FROM ocs.grid_ocs WHERE gid = 1
+UNION ALL
+SELECT gid, geom FROM ocsol;
+
 ALTER TABLE ocsol
 ADD PRIMARY KEY (gid);
 
 CREATE INDEX ocsol_geom_idx
 ON ocsol USING GIST (geom);
 
-CREATE TABLE missing_parts AS
-WITH
-grid as (
-    SELECT geom
-    FROM ocs.grid_ocs
-    WHERE gid = 1
-),
-diff AS (
-    SELECT st_difference((SELECT geom FROM grid), safe_union(a.geom)) AS geom
-    FROM ocsol a
-),
-parts AS (
-    SELECT (st_dump(geom)).geom
-    FROM diff
-)
-SELECT row_number() over() AS gid, geom
-FROM parts;
+-- CREATE TABLE missing_parts AS
+-- WITH
+-- grid as (
+--     SELECT geom
+--     FROM ocs.grid_ocs
+--     WHERE gid = 1
+-- ),
+-- diff AS (
+--     SELECT st_difference((SELECT geom FROM grid), safe_union(a.geom)) AS geom
+--     FROM ocsol_cleaned a
+-- ),
+-- parts AS (
+--     SELECT (st_dump(geom)).geom
+--     FROM diff
+-- )
+-- SELECT row_number() over() AS gid, geom
+-- FROM parts;

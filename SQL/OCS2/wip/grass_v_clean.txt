@@ -1,0 +1,40 @@
+
+g.proj -c proj4="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+
+v.in.ogr --overwrite -o input="PG:host=localhost dbname=fdca user=postgres password=sigibi" layer=test.ocsol output=ocsol
+v.in.ogr --overwrite -o input="PG:host=localhost dbname=fdca user=postgres password=sigibi" layer=test.grid_ocs where="gid=1" output=cell
+
+v.patch -a input=cell output=ocsol
+v.clean --overwrite input=ocsol tool=break,bpol,rmdupl,rmdac threshold=0,0,0,0 type=boundary,centroid output=ocsol_cleaned
+
+# ça ne marche pas : erreur OGR
+v.out.ogr in=ocsol_cleaned output="PG:dbname=fdca user=postgres host=localhost password=sigibi" format=PostgreSQL type=area output_layer=test.ocsol_grass
+
+v.out.postgis -2 in=ocsol_cleaned output="PG:dbname=fdca user=postgres host=localhost password=sigibi" type=area output_layer=test.ocsol_grass
+
+
+
+g.proj -c proj4="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+v.in.ogr min_area=0.0001 snap=-1 --overwrite -o input="PG:host=localhost dbname=fdca user=postgres password=sigibi" layer=test.ocsol output=ocsol
+v.in.ogr min_area=0.0001 snap=-1 --overwrite -o input="PG:host=localhost dbname=fdca user=postgres password=sigibi" layer=test.grid_ocs where="gid=1" output=cell
+g.region -a n=6542000.0 s=6532000.0 e=947000.0 w=937000.0 res=100
+v.clean input=ocsol tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned --overwrite
+v.patch --overwrite -a input=cell output=ocsol_cleaned
+v.clean input=ocsol_cleaned tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned2 --overwrite
+v.out.postgis -2 in=ocsol_cleaned2 output="PG:dbname=fdca user=postgres host=localhost password=sigibi" type=area output_layer=test.ocsol_grass2
+
+
+g.proj -c proj4="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+v.in.ogr min_area=0.0001 snap=-1 --overwrite -o input=/tmp/ocsol.shp output=ocsol
+v.in.ogr min_area=0.0001 snap=-1 --overwrite -o input="PG:host=localhost dbname=fdca user=postgres password=sigibi" layer=test.grid_ocs where="gid=1" output=cell
+g.region -a n=6542000.0 s=6532000.0 e=947000.0 w=937000.0 res=100
+v.clean input=ocsol tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned --overwrite
+v.patch --overwrite -a input=cell output=ocsol_cleaned
+v.clean input=ocsol_cleaned tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned2 --overwrite
+
+
+g.proj -c proj4="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+v.in.ogr min_area=0.0001 snap=0.001 --overwrite -o -e input=/tmp/ocsol.shp output=ocsol
+v.clean input=ocsol tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned --overwrite
+v.centroids input=ocsol_cleaned output=ocsol_filled
+v.out.postgis -2 in=ocsol_cleaned output="PG:dbname=fdca user=postgres host=localhost password=sigibi" type=area output_layer=test.ocsol_cleaned

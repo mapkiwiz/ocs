@@ -1,8 +1,5 @@
 SET search_path = test, ocs, public;
 
-ALTER TABLE surf_construite_snapped
-ADD PRIMARY KEY (gid);
-
 CREATE TABLE surf_construite_nofor AS
 WITH
 foret AS (
@@ -22,9 +19,6 @@ parts AS (
 )
 SELECT row_number() over() AS gid, geom
 FROM parts;
-
-ALTER TABLE surf_foret_snapped
-ADD PRIMARY KEY (gid);
 
 CREATE TABLE surf_foret_noco AS
 WITH

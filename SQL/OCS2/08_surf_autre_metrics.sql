@@ -38,7 +38,7 @@ surface AS (
     GROUP BY a.gid, a.geom
 )
 UPDATE surf_autre
-SET txvurb = coalesce(surface.for, 0) / (surface.varea - st_area(surf.autre.geom))
+SET txvurb = coalesce(surface.for, 0) / (surface.varea - st_area(surf_autre.geom))
 FROM surface
 WHERE surf_autre.gid = surface.gid;
 
@@ -59,7 +59,7 @@ surface AS (
     GROUP BY a.gid
 )
 UPDATE surf_autre
-SET txinfra = coalesce(surface.infra, 0) / (surface.varea - st_area(surf.autre.geom))
+SET txinfra = coalesce(surface.infra, 0) / (surface.varea - st_area(surf_autre.geom))
 FROM surface
 WHERE surf_autre.gid = surface.gid;
 
@@ -80,6 +80,6 @@ surface AS (
     GROUP BY a.gid
 )
 UPDATE surf_autre
-SET txveau = coalesce(surface.eau, 0) / (surface.varea - st_area(surf.autre.geom))
+SET txveau = coalesce(surface.eau, 0) / (surface.varea - st_area(surf_autre.geom))
 FROM surface
 WHERE surf_autre.gid = surface.gid;
