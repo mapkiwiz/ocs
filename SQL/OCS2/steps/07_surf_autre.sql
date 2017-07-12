@@ -1,5 +1,3 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE surf_agricole AS
 WITH
 agricole AS (

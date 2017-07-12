@@ -1,18 +1,18 @@
-CREATE TABLE test.ocsol_tags AS
+CREATE TABLE ocsol_tags AS
 SELECT a.fid, b.gid, b.nature::ocs_nature
-FROM test.ocsol_cleaned a LEFT JOIN
-     test.ocsol b ON st_contains(b.geom, st_pointonsurface(a.geom));
+FROM ocsol_cleaned a LEFT JOIN
+     ocsol b ON st_contains(b.geom, st_pointonsurface(a.geom));
 
-ALTER TABLE test.ocsol_cleaned
+ALTER TABLE ocsol_cleaned
 ADD COLUMN nature ocs_nature;
 
 WITH
 tags AS (
 	SELECT fid, max(nature) AS nature
-	FROM test.ocsol_tags
+	FROM ocsol_tags
 	GROUP BY fid
 )
-UPDATE test.ocsol_cleaned
+UPDATE ocsol_cleaned
 SET nature = coalesce(tags.nature, 'AUTRE/?'::ocs_nature)
 FROM tags
 WHERE ocsol_cleaned.fid = tags.fid;

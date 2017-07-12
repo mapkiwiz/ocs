@@ -12,6 +12,10 @@ CREATE TYPE ocs_nature AS ENUM (
     'EAU',
     'INFRA');
 
+-- Ajouter :
+-- VIGNE
+-- AUTRE/INFRA
+
 CREATE TABLE ocs.carto (
     gid serial,
     nature ocs_nature,

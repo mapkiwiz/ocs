@@ -1,5 +1,3 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE surf_construite_nofor AS
 WITH
 foret AS (

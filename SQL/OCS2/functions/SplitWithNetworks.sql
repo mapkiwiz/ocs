@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION test.SplitWithNetworks(ageom geometry)
+CREATE OR REPLACE FUNCTION SplitWithNetworks(ageom geometry)
 RETURNS SETOF geometry
 AS
 $func$

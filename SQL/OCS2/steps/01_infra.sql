@@ -1,10 +1,8 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE surf_infra AS
 WITH
 grid as (
     SELECT geom
-    FROM ocs.grid_ocs
+    FROM grid_ocs
     WHERE gid = 1
 ),
 route AS (
@@ -39,7 +37,7 @@ CREATE TABLE surf_non_infra_t AS
 WITH
 grid AS (
     SELECT geom
-    FROM ocs.grid_ocs
+    FROM grid_ocs
     WHERE gid = 1
 ),
 diff AS (
@@ -67,11 +65,11 @@ ALTER TABLE surf_non_infra
 ADD PRIMARY KEY (gid);
 
 CREATE INDEX surf_non_infra_geom_idx
-ON test.surf_non_infra USING GIST (geom);
+ON surf_non_infra USING GIST (geom);
 
-CREATE TABLE test.surf_non_infra_small AS
-SELECT * FROM test.surf_non_infra
+CREATE TABLE surf_non_infra_small AS
+SELECT * FROM surf_non_infra
 WHERE st_area(geom) < 2500;
 
-DELETE FROM test.surf_non_infra
+DELETE FROM surf_non_infra
 WHERE st_area(geom) < 2500;

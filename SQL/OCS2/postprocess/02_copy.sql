@@ -4,4 +4,4 @@ next_cell AS (
 )
 INSERT INTO ocs.carto (cell, nature, area, geom)
 SELECT (SELECT cell FROM next_cell) AS cell, nature, st_area(geom) as area, geom
-FROM test.ocsol_cleaned;
+FROM ocsol_cleaned;

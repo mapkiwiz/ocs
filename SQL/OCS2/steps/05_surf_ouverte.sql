@@ -1,5 +1,3 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE surf_ouverte AS
 WITH
 foret AS (
@@ -8,7 +6,7 @@ foret AS (
     WHERE st_area(geom) >= 2500
 ),
 diff AS (
-    SELECT a.gid, coalesce(safe_difference(a.geom, safe_union(b.geom)), a.geom) AS geom
+    SELECT a.gid, coalesce(safe_difference(a.geom, safe_union(b.geom), 1.0), a.geom) AS geom
     FROM surf_nino a LEFT JOIN foret b ON st_intersects(a.geom, b.geom)
     GROUP BY a.gid
 ),

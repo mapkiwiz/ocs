@@ -1,10 +1,8 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE surf_foret AS
 WITH
 grid AS (
     SELECT geom
-    FROM ocs.grid_ocs
+    FROM grid_ocs
     WHERE gid = 1
 ),
 foret AS (
@@ -69,3 +67,6 @@ WITH parts AS (
 )
 SELECT row_number() over() AS gid, geom
 FROM parts;
+
+ALTER TABLE surf_foret_snapped
+ADD PRIMARY KEY (gid);

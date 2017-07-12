@@ -1,5 +1,3 @@
-SET search_path = test, ocs, public;
-
 --
 -- Calcul des caractéristiques des micropolygones et des surfaces autres
 --

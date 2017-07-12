@@ -1,5 +1,3 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE ocsol AS
 WITH parts AS (
 	SELECT 'EAU' AS nature, geom FROM surf_eau_snapped
@@ -31,11 +29,6 @@ WITH parts AS (
 SELECT row_number() over() AS gid, nature, geom
 FROM parts;
 
-CREATE VIEW ocsol_ AS
-SELECT 0 AS gid, geom FROM ocs.grid_ocs WHERE gid = 1
-UNION ALL
-SELECT gid, geom FROM ocsol;
-
 ALTER TABLE ocsol
 ADD PRIMARY KEY (gid);
 
@@ -46,7 +39,7 @@ ON ocsol USING GIST (geom);
 -- WITH
 -- grid as (
 --     SELECT geom
---     FROM ocs.grid_ocs
+--     FROM grid_ocs
 --     WHERE gid = 1
 -- ),
 -- diff AS (

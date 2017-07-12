@@ -1,11 +1,8 @@
-SET search_path = test, ocs, public;
-
-
 CREATE TABLE surf_construite AS
 WITH
 grid AS (
     SELECT geom
-    FROM ocs.grid_ocs
+    FROM grid_ocs
     WHERE gid = 1
 ),
 bati AS (
@@ -69,3 +66,6 @@ parts AS (
 )
 SELECT row_number() over() AS gid, geom
 FROM parts;
+
+ALTER TABLE surf_construite_snapped
+ADD PRIMARY KEY (gid);

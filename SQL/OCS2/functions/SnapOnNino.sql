@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION test.SnapOnNino(ageom geometry, area_tolerance double precision, width_tolerance double precision)
+CREATE OR REPLACE FUNCTION SnapOnNino(ageom geometry, area_tolerance double precision, width_tolerance double precision)
 RETURNS geometry
 AS
 $func$
@@ -14,7 +14,7 @@ BEGIN
     WITH
     small_diff AS (
         SELECT (ST_Dump(ST_Difference(b.geom, ageom))).geom
-        FROM test.surf_nino b
+        FROM surf_nino b
         WHERE st_contains(b.geom, st_centroid(ageom))
     ),
     parts AS (
@@ -45,9 +45,9 @@ DECLARE
 
 BEGIN
 
-    SELECT count(*) FROM test.surf_construite_nino INTO num;
+    SELECT count(*) FROM surf_construite_nino INTO num;
     FOR i, ageom IN
-        SELECT row_number() over(), geom FROM test.surf_construite_nino
+        SELECT row_number() over(), geom FROM surf_construite_nino
     LOOP
 
         RETURN NEXT SnapOnNino(ageom, area_tolerance, width_tolerance);

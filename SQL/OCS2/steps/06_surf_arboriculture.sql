@@ -1,10 +1,8 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE surf_arboriculture AS
 WITH
 grid AS (
     SELECT geom
-    FROM ocs.grid_ocs
+    FROM grid_ocs
     WHERE gid = 1
 ),
 prairie AS (

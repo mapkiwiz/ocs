@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION test.SnapOnSurfOuverte(ageom geometry, area_tolerance double precision, width_tolerance double precision)
+CREATE OR REPLACE FUNCTION SnapOnSurfOuverte(ageom geometry, area_tolerance double precision, width_tolerance double precision)
 RETURNS geometry
 AS
 $func$
@@ -14,7 +14,7 @@ BEGIN
     WITH
     small_diff AS (
         SELECT (ST_Dump(ST_Difference(b.geom, ageom))).geom
-        FROM test.surf_ouverte b
+        FROM surf_ouverte b
         WHERE st_contains(b.geom, st_centroid(ageom))
     ),
     parts AS (

@@ -1,10 +1,8 @@
-SET search_path = test, ocs, public;
-
 CREATE TABLE surf_eau AS
 WITH
 grid AS (
     SELECT geom
-    FROM ocs.grid_ocs
+    FROM grid_ocs
     WHERE gid = 1
 ),
 eau AS (
