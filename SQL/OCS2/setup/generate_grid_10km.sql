@@ -133,3 +133,23 @@ SELECT geom, dept, st_geohash(st_transform(st_centroid(geom), 4326), 6) AS geoha
 FROM ocs.grid_ocs_boundary;
 
 DROP TABLE ocs.grid_ocs_boundary;
+
+CREATE OR REPLACE FUNCTION merge_tiles(tid bigint, target bigint)
+RETURNS VOID
+AS
+$func$
+DECLARE
+BEGIN
+
+UPDATE ocs.grid_ocs
+SET geom = (SELECT st_union(geom) AS geom
+  FROM ocs.grid_ocs
+  WHERE gid = tid OR gid = target)
+WHERE gid = target;
+
+DELETE FROM ocs.grid_ocs
+WHERE gid = tid;
+
+END
+$func$
+LANGUAGE plpgsql VOLATILE STRICT;

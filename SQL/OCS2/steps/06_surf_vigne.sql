@@ -6,7 +6,7 @@ grid AS (
     WHERE gid = 1
 ),
 vigne AS (
-    SELECT (st_dump(st_intersection(a.geom, (SELECT geom FROM grid)))).geom AS geom
+    SELECT (st_dump(st_intersection(st_makevalid(a.geom), (SELECT geom FROM grid)))).geom AS geom
     FROM ref.rpg_2014 a
     WHERE st_intersects(a.geom, (SELECT geom FROM grid))
           AND a.code_cultu = '21'

@@ -38,3 +38,11 @@ v.in.ogr min_area=0.0001 snap=0.001 --overwrite -o -e input=/tmp/ocsol.shp outpu
 v.clean input=ocsol tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned --overwrite
 v.centroids --overwrite input=ocsol_cleaned output=ocsol_filled
 v.out.postgis -2 in=ocsol_cleaned output="PG:dbname=fdca user=postgres host=localhost password=sigibi" type=area output_layer=test.ocsol_cleaned
+
+
+g.proj -c proj4="+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+v.in.ogr min_area=0.0001 snap=0.001 --overwrite -o -e input=/tmp/ocsol.shp output=ocsol
+v.clean input=ocsol tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned --overwrite
+v.centroids --overwrite input=ocsol_cleaned output=ocsol_filled
+v.out.postgis -2 in=ocsol_cleaned output="PG:dbname=fdca user=postgres host=localhost password=sigibi" type=area output_layer=test.ocsol_cleaned
+v.in.ogr min_area=0.0001 snap=0.001 --overwrite -o -e input="PG:dbname=fdca user=postgres host=localhost password=sigibi" layer=ocs.carto_raw where="tileid=671" output=ocsol
