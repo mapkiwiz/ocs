@@ -1,19 +1,16 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.14.11-Essen" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.14.11-Essen" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
-    <edittype widgetv2type="TextEdit" name="fid">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="cat">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="x_gid">
+    <edittype widgetv2type="TextEdit" name="gid">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="nature">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="area">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="tileid">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
   </edittypes>
@@ -24,11 +21,13 @@
       <category render="true" symbol="2" value="BATI" label="BATI"/>
       <category render="true" symbol="3" value="CULTURES" label="CULTURES"/>
       <category render="true" symbol="4" value="PRAIRIE" label="PRAIRIE"/>
-      <category render="true" symbol="5" value="ARBO" label="ARBO"/>
-      <category render="true" symbol="6" value="FORET" label="FORET"/>
-      <category render="true" symbol="7" value="AUTRE/BATI" label="AUTRE/BATI"/>
-      <category render="true" symbol="8" value="AUTRE/NATURE" label="AUTRE/NATURE"/>
-      <category render="true" symbol="9" value="AUTRE/?" label="AUTRE/?"/>
+      <category render="true" symbol="5" value="ARBORICULTURE" label="ARBORICULTURE"/>
+      <category render="true" symbol="6" value="VIGNE" label="VIGNE"/>
+      <category render="true" symbol="7" value="FORET" label="FORET"/>
+      <category render="true" symbol="8" value="AUTRE/INFRA" label="AUTRE/INFRA"/>
+      <category render="true" symbol="9" value="AUTRE/ARTIFICIALISE" label="AUTRE/ARTIFICIALISE"/>
+      <category render="true" symbol="10" value="AUTRE/NATURE" label="AUTRE/NATURE"/>
+      <category render="true" symbol="11" value="AUTRE/?" label="AUTRE/?"/>
     </categories>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
@@ -50,6 +49,36 @@
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="color" v="250,22,101,255"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="no"/>
+          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="fill" name="10">
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="color" v="196,221,138,255"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="no"/>
+          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="fill" name="11">
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="color" v="242,242,242,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -161,22 +190,59 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="6">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="111,158,0,255"/>
+          <prop k="color" v="186,221,105,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_color" v="128,152,72,255"/>
           <prop k="outline_style" v="no"/>
           <prop k="outline_width" v="0.26"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="style" v="solid"/>
         </layer>
+        <layer pass="0" class="PointPatternFill" locked="0">
+          <prop k="displacement_x" v="1"/>
+          <prop k="displacement_x_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="displacement_x_unit" v="MM"/>
+          <prop k="displacement_y" v="0"/>
+          <prop k="displacement_y_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="displacement_y_unit" v="MM"/>
+          <prop k="distance_x" v="2"/>
+          <prop k="distance_x_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="distance_x_unit" v="MM"/>
+          <prop k="distance_y" v="2"/>
+          <prop k="distance_y_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="distance_y_unit" v="MM"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <symbol alpha="1" clip_to_extent="1" type="marker" name="@6@1">
+            <layer pass="0" class="SimpleMarker" locked="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="255,0,0,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="name" v="line"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="87,104,49,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="area"/>
+              <prop k="size" v="1"/>
+              <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+            </layer>
+          </symbol>
+        </layer>
       </symbol>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="7">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="250,163,169,255"/>
+          <prop k="color" v="111,158,0,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -191,7 +257,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="8">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="196,221,138,255"/>
+          <prop k="color" v="250,124,169,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -206,7 +272,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="9">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="242,242,242,255"/>
+          <prop k="color" v="250,163,169,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -411,7 +477,7 @@
     <selectedonly on=""/>
   </labelattributes>
   <SingleCategoryDiagramRenderer diagramType="Pie">
-    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
       <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>

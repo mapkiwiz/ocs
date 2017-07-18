@@ -1,29 +1,47 @@
 CREATE SCHEMA ocs;
 
+CREATE TABLE ocs.grid_ocs (
+    gid serial PRIMARY KEY,                                                                                      
+    geom geometry(Polygon, 2154),
+    dept character varying(30),
+    geohash character varying(6),
+    boundary boolean default false
+);
+
 CREATE TYPE ocs_nature AS ENUM (
     'AUTRE/?', 
     'AUTRE/NATURE', 
-    'AUTRE/BATI', 
-    'ARBO', 
+    'AUTRE/ARTIFICIALISE', 
+    'ARBORICULTURE',
+    'VIGNE', 
     'PRAIRIE', 
     'CULTURES', 
     'BATI', 
     'FORET', 
     'EAU',
-    'INFRA');
+    'AUTRE/INFRA',
+    'INFRA'
+);
 
--- Ajouter :
--- VIGNE
--- AUTRE/INFRA
-
-CREATE TABLE ocs.carto (
-    gid serial,
+CREATE TABLE ocs.carto_raw (
+    gid serial PRIMARY KEY,
     nature ocs_nature,
     area double precision,
     geom geometry(Polygon, 2154),
-    cell integer
+    tileid integer
 );
 
-CREATE SEQUENCE ocs.carto_cell_seq;
+CREATE INDEX carto_raw_geom_idx
+ON ocs.carto_raw USING GIST (geom);
 
+CREATE TABLE ocs.carto (
+    gid serial PRIMARY KEY,
+    nature ocs_nature,
+    area double precision,
+    geom geometry(Polygon, 2154),
+    tileid integer
+);
+
+CREATE INDEX carto_geom_idx
+ON ocs.carto USING GIST (geom);
 

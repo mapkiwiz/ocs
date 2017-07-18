@@ -4,7 +4,7 @@ WITH parts AS (
 	UNION ALL
 	SELECT 'INFRA' AS nature, geom FROM surf_infra
 	UNION ALL
-    SELECT 'INFRA' AS nature, geom FROM surf_non_infra_small
+    SELECT 'AUTRE/INFRA' AS nature, geom FROM surf_non_infra_small
     UNION ALL
 	SELECT 'FORET' AS nature, geom FROM surf_foret_noco
     UNION ALL
@@ -14,19 +14,21 @@ WITH parts AS (
     UNION ALL
     SELECT 'CULTURES' AS nature, geom FROM surf_cultures_snapped
     UNION ALL
-    SELECT 'ARBO' AS nature, geom FROM surf_arboriculture_snapped
+    SELECT 'ARBORICULTURE' AS nature, geom FROM surf_arboriculture_snapped
+    UNION ALL
+    SELECT 'VIGNE' AS nature, geom FROM surf_vigne_snapped
     UNION ALL
     SELECT 'AUTRE/NATURE' AS nature, geom FROM surf_autre WHERE st_area(geom) < 2500 AND txfor > .6
     UNION ALL
-    SELECT 'AUTRE/BATI' AS nature, geom FROM surf_autre WHERE st_area(geom) < 2500 AND txfor <= .6
+    SELECT 'AUTRE/ARTIFICIALISE' AS nature, geom FROM surf_autre WHERE st_area(geom) < 2500 AND txfor <= .6
     UNION ALL
     SELECT 'AUTRE/NATURE' AS nature, geom FROM surf_autre WHERE st_area(geom) >= 2500 AND st_area(geom) < 5e4 AND txvurb <= .2
     UNION ALL
-    SELECT 'AUTRE/BATI' AS nature, geom FROM surf_autre WHERE st_area(geom) >= 2500 AND st_area(geom) < 5e4 AND txvurb > .2
+    SELECT 'AUTRE/ARTIFICIALISE' AS nature, geom FROM surf_autre WHERE st_area(geom) >= 2500 AND st_area(geom) < 5e4 AND txvurb > .2
     UNION ALL
     SELECT 'AUTRE/?' AS nature, geom FROM surf_autre WHERE st_area(geom) >= 5e4
 )
-SELECT row_number() over() AS gid, nature, geom
+SELECT row_number() over() AS gid, nature, st_force2d(geom) AS geom
 FROM parts;
 
 ALTER TABLE ocsol

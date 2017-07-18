@@ -1,19 +1,24 @@
-CREATE TABLE surf_arboriculture AS
+CREATE TABLE surf_vigne AS
 WITH
 grid AS (
     SELECT geom
     FROM grid_ocs
     WHERE gid = 1
 ),
-arbo AS (
+vigne AS (
     SELECT (st_dump(st_intersection(a.geom, (SELECT geom FROM grid)))).geom AS geom
     FROM ref.rpg_2014 a
     WHERE st_intersects(a.geom, (SELECT geom FROM grid))
-          AND a.code_cultu IN ('20','22','23','27')
+          AND a.code_cultu = '21'
+    UNION ALL
+    SELECT (st_dump(st_intersection(a.geom, (SELECT geom FROM grid)))).geom AS geom
+    FROM bdt.bdt_zone_vegetation a
+    WHERE st_intersects(a.geom, (SELECT geom FROM grid))
+          AND nature = 'Vigne'
 ),
 dilatation AS (
     SELECT st_buffer(geom, 5) AS geom
-    FROM arbo
+    FROM vigne
 ),
 erosion AS (
     SELECT st_buffer(st_union(geom), -5) AS geom
@@ -26,14 +31,14 @@ parts AS (
 SELECT row_number() over() AS gid, geom
 FROM parts;
 
-ALTER TABLE surf_arboriculture
+ALTER TABLE surf_vigne
 ADD PRIMARY KEY (gid);
 
-CREATE TABLE surf_arboriculture_t AS
+CREATE TABLE surf_vigne_t AS
 WITH
 intersection AS (
     SELECT a.gid, coalesce(st_intersection(a.geom, st_union(b.geom)), a.geom) AS geom
-    FROM surf_arboriculture a LEFT JOIN surf_ouverte b
+    FROM surf_vigne a LEFT JOIN surf_ouverte b
     ON st_intersects(a.geom, b.geom)
     GROUP BY a.gid
 ),
@@ -45,11 +50,11 @@ SELECT row_number() over() AS gid, geom
 FROM parts
 WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
-CREATE TABLE surf_arboriculture_snapped AS
+CREATE TABLE surf_vigne_snapped AS
 WITH
 snaps AS (
     SELECT SnapOnSurfOuverte(geom, 2500, 10) AS geom
-    FROM surf_arboriculture_t
+    FROM surf_vigne_t
 ),
 parts AS (
     SELECT (st_dump(geom)).geom

@@ -61,12 +61,17 @@ WHERE ST_GeometryType(geom) = 'ST_Polygon';
 -- FROM parts;
 
 CREATE TABLE surf_foret_snapped AS
-WITH parts AS (
+WITH snaps AS (
     SELECT SnapOnNino(geom, 2500, 5) AS geom
     FROM surf_foret_nino
+),
+parts AS (
+    SELECT (st_dump(geom)).geom
+    FROM snaps
 )
 SELECT row_number() over() AS gid, geom
-FROM parts;
+FROM parts
+WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
 ALTER TABLE surf_foret_snapped
 ADD PRIMARY KEY (gid);

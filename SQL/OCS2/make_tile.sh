@@ -59,3 +59,12 @@ while read f; do
 	psql -f $f
 
 done
+
+psql <<EOF
+
+	INSERT INTO ocs.carto_raw (nature, tileid, geom, area)
+	SELECT nature::ocs_nature, $CELLID AS tileid, geom, st_area(geom) AS area
+	FROM $SCHEMA.ocsol
+	WHERE ST_GeometryType(geom) = 'ST_Polygon';
+
+EOF

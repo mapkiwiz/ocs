@@ -24,9 +24,13 @@ SELECT row_number() over() AS gid, geom
 FROM intersection;
 
 CREATE TABLE surf_eau_snapped AS
-WITH parts AS (
+WITH snaps AS (
     SELECT SnapOnNonInfra(geom, 2500, 5) AS geom
     FROM surf_eau_non_infra
+),
+parts AS (
+    SELECT (st_dump(geom)).geom
+    FROM snaps
 )
 SELECT row_number() over() AS gid, geom
 FROM parts;
