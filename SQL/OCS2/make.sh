@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DEP=$1
+
 function tiles {
 
 	DEPARTEMENT=$1
@@ -15,10 +17,10 @@ WITH tiles AS (
 		FROM ocs.carto_raw
 		WHERE tileid = grid_ocs.gid
 	)
+	ORDER BY gid
 )
 SELECT row_number() over() AS i, (SELECT count(*) FROM tiles) AS n, gid
-FROM tiles
-ORDER BY gid;
+FROM tiles;
 EOF
 
 }
@@ -34,8 +36,8 @@ function make_group {
 	export PGUSER=postgres
 	tiles $DEPARTEMENT $NGROUPS $GROUP | while read i n t;
 	do
-	    echo "Tile $i / $n"
-	    ./make_tile.sh work$GROUP $t
+	    echo "Group $GROUP Tile $i / $n"
+	    ./make_tile.sh work$GROUP $t 2>&1 > /tmp/ocs/026_G$GROUP.log
 	done
 
 	echo "Group $GROUP done."
@@ -45,7 +47,7 @@ function make_group {
 # Example usage :
 #
 mkdir -p /tmp/ocs
-make_group SAVOIE 4 0 > /tmp/ocs/073_G0.log &
-make_group SAVOIE 4 1 > /tmp/ocs/073_G1.log &
-make_group SAVOIE 4 2 > /tmp/ocs/073_G2.log &
-make_group SAVOIE 4 3 > /tmp/ocs/073_G3.log &
+for i in {0..7};
+do
+	make_group $DEP 7 $i &
+done

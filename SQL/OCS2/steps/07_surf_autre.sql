@@ -1,11 +1,13 @@
 CREATE TABLE surf_agricole AS
 WITH
 agricole AS (
-    SELECT geom FROM surf_prairie
+    SELECT geom FROM surf_prairie_snapped
     UNION ALL
-    SELECT geom FROM surf_cultures
+    SELECT geom FROM surf_cultures_snapped
     UNION ALL
-    SELECT geom FROM surf_arboriculture
+    SELECT geom FROM surf_arboriculture_snapped
+    UNION ALL
+    SELECT geom FROM surf_vigne_snapped
 )
 SELECT row_number() over() AS gid, geom
 FROM agricole;

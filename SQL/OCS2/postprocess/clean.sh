@@ -18,7 +18,7 @@ v.centroids --overwrite input=ocsol_cleaned output=ocsol_filled
 v.out.postgis --quiet -2 in=ocsol_filled output="PG:dbname=fdca user=postgres host=localhost password=sigibi" type=area output_layer=$SCHEMA.ocsol
 
 mkdir -p /tmp/ocs/$SCHEMA
-echo "SET search_path = work4, ocs, public;" > /tmp/ocs/$SCHEMA/postprocess.sql
+echo "SET search_path = $SCHEMA, ocs, public;" > /tmp/ocs/$SCHEMA/postprocess.sql
 cat 01_merge_tags.sql >> /tmp/ocs/$SCHEMA/postprocess.sql
 cat 02_copy.sql >> /tmp/ocs/$SCHEMA/postprocess.sql
 psql < /tmp/ocs/$SCHEMA/postprocess.sql

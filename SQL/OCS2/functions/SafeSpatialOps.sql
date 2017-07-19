@@ -72,7 +72,7 @@ CREATE OR REPLACE FUNCTION safe_union(geom_a geometry, geom_b geometry)
 RETURNS geometry AS
 $$
 DECLARE
-   tolerance double precision := 0.001;
+   tolerance double precision := 0.5;
 BEGIN
     RETURN ST_Union(geom_a, geom_b);
     EXCEPTION

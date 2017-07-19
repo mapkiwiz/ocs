@@ -114,10 +114,10 @@ WHERE grid_ocs.gid = dept.gid AND dept.name IS NULL;
 
 CREATE TABLE ocs.grid_ocs_boundary AS
 WITH clip AS (
-  SELECT a.gid, b.depart AS dept, st_intersection(a.geom, st_union(b.geom)) AS geom
+  SELECT a.gid, a.dept AS dept, st_intersection(a.geom, st_union(b.geom)) AS geom
   FROM ocs.grid_ocs a LEFT JOIN bdt.bdt_commune b ON st_intersects(a.geom, b.geom)
-  WHERE a.boundary
-  GROUP BY a.gid, b.depart
+  WHERE a.boundary AND a.dept = 'DROME'
+  GROUP BY a.gid
 ),
 parts AS (
   SELECT gid, dept, (st_dump(geom)).geom

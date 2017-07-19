@@ -45,3 +45,14 @@ CREATE TABLE ocs.carto (
 CREATE INDEX carto_geom_idx
 ON ocs.carto USING GIST (geom);
 
+CREATE TABLE ocs.carto_umc (
+    gid serial PRIMARY KEY,
+    nature ocs_nature,
+    area double precision,
+    geom geometry(Polygon, 2154),
+    tileid integer
+);
+
+CREATE INDEX carto_umc_geom_idx
+ON ocs.carto_umc USING GIST (geom);
+

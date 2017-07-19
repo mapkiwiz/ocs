@@ -7,7 +7,7 @@ WORKING_DIR=/tmp/ocs
 echo "Using schema $SCHEMA"
 echo "Processing cell $CELLID ..."
 
-psql <<EOF
+psql -q <<EOF
 
 DROP SCHEMA IF EXISTS $SCHEMA CASCADE;
 CREATE SCHEMA $SCHEMA;
@@ -48,7 +48,7 @@ done
 ls $WORKING_DIR/$SCHEMA/functions/*.sql |
 while read f; do
 
-	psql -f $f
+	psql -q -f $f
 
 done
 
@@ -56,11 +56,11 @@ ls $WORKING_DIR/$SCHEMA/steps/*.sql |
 while read f; do
 
 	echo Running step $f
-	psql -f $f
+	psql -q -f $f
 
 done
 
-psql <<EOF
+psql -q <<EOF
 
 	INSERT INTO ocs.carto_raw (nature, tileid, geom, area)
 	SELECT nature::ocs_nature, $CELLID AS tileid, geom, st_area(geom) AS area

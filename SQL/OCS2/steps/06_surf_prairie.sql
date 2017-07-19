@@ -6,7 +6,7 @@ grid AS (
     WHERE gid = 1
 ),
 prairie AS (
-    SELECT (st_dump(st_intersection(st_makevalid(a.geom), (SELECT geom FROM grid)))).geom AS geom
+    SELECT (st_dump(safe_intersection(st_makevalid(a.geom), (SELECT geom FROM grid), 0.5))).geom AS geom
     FROM ref.rpg_2014 a
     WHERE st_intersects(a.geom, (SELECT geom FROM grid))
           AND (a.code_cultu = '17' or a.code_cultu = '18')
@@ -32,7 +32,7 @@ ADD PRIMARY KEY (gid);
 CREATE TABLE surf_prairie_t AS
 WITH
 intersection AS (
-    SELECT a.gid, coalesce(st_intersection(a.geom, st_union(b.geom)), a.geom) AS geom
+    SELECT a.gid, coalesce(safe_intersection(a.geom, safe_union(b.geom), 0.5), a.geom) AS geom
     FROM surf_prairie a LEFT JOIN surf_ouverte b
     ON st_intersects(a.geom, b.geom)
     GROUP BY a.gid
