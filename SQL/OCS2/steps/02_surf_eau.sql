@@ -6,7 +6,7 @@ grid AS (
     WHERE gid = 1
 ),
 eau AS (
-    SELECT (st_dump(st_union(st_intersection(a.geom, (SELECT geom FROM grid))))).geom as geom
+    SELECT (st_dump(st_union(st_intersection(st_force2d(a.geom), (SELECT geom FROM grid))))).geom as geom
     FROM bdt.bdt_surface_eau a
     WHERE st_intersects(a.geom, (SELECT geom FROM grid)) AND a.regime = 'Permanent'
 )

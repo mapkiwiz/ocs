@@ -3,11 +3,14 @@
 SCHEMA=$1
 CELLID=$2
 WORKING_DIR=/tmp/ocs
+FLAGS=-q
 
 echo "Using schema $SCHEMA"
 echo "Processing cell $CELLID ..."
 
-psql -q <<EOF
+psql $FLAGS <<EOF
+
+SET client_min_messages TO WARNING;
 
 DROP SCHEMA IF EXISTS $SCHEMA CASCADE;
 CREATE SCHEMA $SCHEMA;
@@ -31,6 +34,7 @@ ls functions/*.sql |
 while read f; do
 
 	echo "SET search_path = $SCHEMA, ocs, public;" > $WORKING_DIR/$SCHEMA/$f
+	echo "SET client_min_messages TO WARNING;" >> $WORKING_DIR/$SCHEMA/$f
 	echo >> $WORKING_DIR/$SCHEMA/$f
 	cat $f >> $WORKING_DIR/$SCHEMA/$f
 
@@ -40,6 +44,7 @@ ls steps/*.sql |
 while read f; do
 
 	echo "SET search_path = $SCHEMA, ocs, public;" > $WORKING_DIR/$SCHEMA/$f
+	echo "SET client_min_messages TO WARNING;" >> $WORKING_DIR/$SCHEMA/$f
 	echo >> $WORKING_DIR/$SCHEMA/$f
 	cat $f >> $WORKING_DIR/$SCHEMA/$f
 
@@ -48,7 +53,7 @@ done
 ls $WORKING_DIR/$SCHEMA/functions/*.sql |
 while read f; do
 
-	psql -q -f $f
+	psql $FLAGS -f $f
 
 done
 
@@ -56,11 +61,13 @@ ls $WORKING_DIR/$SCHEMA/steps/*.sql |
 while read f; do
 
 	echo Running step $f
-	psql -q -f $f
+	psql $FLAGS -f $f
 
 done
 
-psql -q <<EOF
+psql $FLAGS <<EOF
+
+	SET client_min_messages TO WARNING;
 
 	INSERT INTO ocs.carto_raw (nature, tileid, geom, area)
 	SELECT nature::ocs_nature, $CELLID AS tileid, geom, st_area(geom) AS area

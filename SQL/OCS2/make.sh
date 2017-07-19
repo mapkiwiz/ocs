@@ -9,15 +9,20 @@ function tiles {
 	GROUP=$3
 
 	psql -At -F " " <<EOF
-WITH tiles AS (
-	SELECT gid FROM ocs.grid_ocs
-	WHERE dept = '$DEPARTEMENT' AND (gid+$GROUP) % $NGROUPS = 0
+WITH
+groups AS (
+	SELECT gid, (gid % $NGROUPS) AS gr FROM ocs.grid_ocs
+	WHERE dept = '$DEPARTEMENT'
+	ORDER BY gid
+),
+tiles AS (
+	SELECT gid FROM groups
+	WHERE gr = $GROUP
 	AND NOT EXISTS (
 		SELECT gid
 		FROM ocs.carto_raw
-		WHERE tileid = grid_ocs.gid
+		WHERE tileid = groups.gid
 	)
-	ORDER BY gid
 )
 SELECT row_number() over() AS i, (SELECT count(*) FROM tiles) AS n, gid
 FROM tiles;
@@ -49,5 +54,5 @@ function make_group {
 mkdir -p /tmp/ocs
 for i in {0..7};
 do
-	make_group $DEP 7 $i &
+	make_group $DEP 8 $i &
 done

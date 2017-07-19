@@ -52,7 +52,7 @@ parts AS (
 )
 SELECT row_number() over() AS gid, geom, st_area(geom) AS area
 FROM parts
-WHERE ST_GeometryType(geom) = 'ST_Polygon';
+WHERE ST_GeometryType(geom) = 'ST_Polygon' AND st_area(geom) > 0;
 
 ALTER TABLE surf_autre
 ADD PRIMARY KEY (gid);
