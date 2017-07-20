@@ -69,6 +69,9 @@ psql $FLAGS <<EOF
 
 	SET client_min_messages TO WARNING;
 
+	DELETE FROM ocs.carto_raw
+	WHERE tileid = $CELLID;
+
 	INSERT INTO ocs.carto_raw (nature, tileid, geom, area)
 	SELECT nature::ocs_nature, $CELLID AS tileid, geom, st_area(geom) AS area
 	FROM $SCHEMA.ocsol

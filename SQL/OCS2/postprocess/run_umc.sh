@@ -1,7 +1,8 @@
 #!/bin/bash
 
-SOURCE_SCHEMA=ocs_073
-WORK_SCHEMA=umc0
+DEPARTEMENT=$1
+WORK_SCHEMA=$2
+SOURCE_SCHEMA=ocs
 SRID="EPSG:2154"
 
 function tiles {
@@ -9,7 +10,8 @@ function tiles {
 	psql -At -F " " <<EOF
 WITH tiles AS (
 	SELECT gid FROM $SOURCE_SCHEMA.grid_ocs
-	WHERE EXISTS (
+	WHERE dept = '$DEPARTEMENT'
+	AND EXISTS (
 		SELECT gid
 		FROM $SOURCE_SCHEMA.carto
 		WHERE tileid = grid_ocs.gid

@@ -4,7 +4,7 @@ CREATE TABLE ocs.grid_ocs_boundary AS
 WITH clip AS (
   SELECT a.gid, a.dept AS dept, st_intersection(a.geom, st_union(b.geom)) AS geom
   FROM ocs.grid_ocs a LEFT JOIN bdt.bdt_commune b ON st_intersects(a.geom, b.geom)
-  WHERE a.boundary AND a.dept = 'PUY-DE-DOME'
+  WHERE a.gid = 996 AND b.depart = 'AIN'
   GROUP BY a.gid
 ),
 parts AS (

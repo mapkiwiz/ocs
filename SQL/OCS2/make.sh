@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DEP=$1
+SCHEMA=$2
 
 function tiles {
 
@@ -42,7 +43,7 @@ function make_group {
 	tiles $DEPARTEMENT $NGROUPS $GROUP | while read i n t;
 	do
 	    echo "Group $GROUP Tile $i / $n"
-	    ./make_tile.sh work$GROUP $t 2>&1 > /tmp/ocs/026_G$GROUP.log
+	    ./make_tile.sh $SCHEMA$GROUP $t 2>&1 > /dev/null
 	done
 
 	echo "Group $GROUP done."
@@ -52,7 +53,7 @@ function make_group {
 # Example usage :
 #
 mkdir -p /tmp/ocs
-for i in {0..7};
+for i in {0..3};
 do
-	make_group $DEP 8 $i &
+	make_group $DEP 4 $i &
 done
