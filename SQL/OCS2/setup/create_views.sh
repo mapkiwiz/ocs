@@ -21,14 +21,14 @@ EOF
 
 }
 
-while read no name; do
+while read name no; do
 
-    create_view $no $name
+    create_view $name $no
 
 done <<EOF
 AIN 001
 ALLIER 002
-ARDECHE 008
+ARDECHE 007
 CANTAL 015
 DROME 026
 HAUTE-LOIRE 043

@@ -56,3 +56,18 @@ CREATE TABLE ocs.carto_umc (
 CREATE INDEX carto_umc_geom_idx
 ON ocs.carto_umc USING GIST (geom);
 
+CREATE TABLE ocs.autre_clc_cleaned (
+    gid serial PRIMARY KEY,
+    code_12 character(3),
+    geom geometry(Polygon, 2154),
+    tileid integer
+);
+
+CREATE INDEX autre_clc_cleaned_geom_idx
+ON ocs.autre_clc_cleaned USING GIST (geom);
+
+CREATE OR REPLACE VIEW ocs.autre_clc AS
+SELECT b.code_12, a.tileid, (st_dump(st_intersection(b.geom, a.geom))).geom AS geom
+FROM ocs.carto_umc a LEFT JOIN ref.clc_2012 b
+     ON st_intersects(a.geom, b.geom)
+WHERE a.nature IN ('AUTRE/NATURE', 'AUTRE/?')

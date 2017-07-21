@@ -3,7 +3,7 @@
 SOURCE_SCHEMA=$1
 WORK_SCHEMA=$2
 TILEID=$3
-FLAGS=
+FLAGS=--quiet
 
 psql <<EOF
 
