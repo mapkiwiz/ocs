@@ -71,3 +71,15 @@ SELECT b.code_12, a.tileid, (st_dump(st_intersection(b.geom, a.geom))).geom AS g
 FROM ocs.carto_umc a LEFT JOIN ref.clc_2012 b
      ON st_intersects(a.geom, b.geom)
 WHERE a.nature IN ('AUTRE/NATURE', 'AUTRE/?')
+
+CREATE TABLE ocs.carto_clc (
+    gid serial PRIMARY KEY,
+    tileid integer,
+    geom geometry(Polygon, 2154),
+    nature ocs_nature_clc,
+    code_clc character(3)
+);
+
+CREATE INDEX carto_clc_geom_idx
+ON ocs.carto_clc USING GIST (geom);
+

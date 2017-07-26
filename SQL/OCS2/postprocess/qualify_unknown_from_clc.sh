@@ -10,7 +10,7 @@ psql <<EOF
 	CREATE SCHEMA $SCHEMA;
 
 	CREATE TABLE $SCHEMA.autre_clc AS
-	SELECT * FROM ocs.autre_clc_069
+	SELECT * FROM ocs.autre_clc
 	WHERE tileid = $TILEID;
 
 EOF

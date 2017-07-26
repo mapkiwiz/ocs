@@ -40,6 +40,7 @@ input="PG:dbname=fdca user=postgres host=localhost password=sigibi" \
 layer=$WORK_SCHEMA.pre_umc where="tileid=$TILEID" output=ocsol
 
 v.clean $FLAGS --overwrite input=ocsol output=cleaned tool=rmarea threshold=2500
+#v.generalize $FLAGS --overwrite cleaned method=douglas threshold=50 output=simplified
 
 v.out.postgis $FLAGS -2 in=cleaned output="PG:dbname=fdca user=postgres host=localhost password=sigibi" \
 type=area output_layer=$WORK_SCHEMA.umc

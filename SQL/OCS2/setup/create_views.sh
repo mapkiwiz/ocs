@@ -14,7 +14,7 @@ function create_view {
 
         CREATE OR REPLACE VIEW ocs_final.carto_$DEPNO as
         SELECT a.*
-        FROM ocs.carto_umc a inner join ocs.grid_ocs b on b.gid = a.tileid
+        FROM ocs.carto_clc a inner join ocs.grid_ocs b on b.gid = a.tileid
         WHERE b.dept = '$DEPNAME';
 
 EOF
