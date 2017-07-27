@@ -1,14 +1,14 @@
 WITH
+tile_info AS (
+	SELECT
+		tileid,
+		st_area(geom) AS area
+	FROM grid_ocs
+	WHERE gid = 1
+),
 raw AS (
 -- Surface stats, before post-processing
 	WITH
-	tile_info AS (
-		SELECT
-			tileid,
-			st_area(geom) AS area
-		FROM grid_ocs
-		WHERE gid = 1
-	),
 	raw_stats AS (
 		SELECT
 			count(gid) AS nobjs,
@@ -50,13 +50,6 @@ raw AS (
 simplified AS (
 	-- Simplified Stats
 	WITH
-	tile_info AS (
-		SELECT
-			tileid,
-			st_area(geom) AS area
-		FROM grid_ocs
-		WHERE gid = 1
-	),
 	raw_stats AS (
 		SELECT
 			count(fid) AS nobjs,
@@ -98,13 +91,6 @@ simplified AS (
 final AS (
 	-- after post-process stats
 	WITH
-	tile_info AS (
-		SELECT
-			tileid,
-			st_area(geom) AS area
-		FROM grid_ocs
-		WHERE gid = 1
-	),
 	raw_stats AS (
 		SELECT
 			count(gid) AS nobjs,

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-SCHEMA=$1
-TILEID=$2
+STATUS=$1
+SCHEMA=$2
+TILEID=$3
 WORKING_DIR=/tmp/ocs
 FLAGS=
 

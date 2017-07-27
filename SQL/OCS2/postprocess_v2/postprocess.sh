@@ -3,7 +3,9 @@
 WORK_DIR=/tmp/ocs
 SCHEMA=$1
 TILEID=$2
-FLAGS=
+FLAGS=--quiet
+
+g.gisenv set="DEBUG=0"
 
 # Step 1 : remove overlapping areas and fill gaps
 
