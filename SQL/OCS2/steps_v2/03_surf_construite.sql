@@ -79,12 +79,17 @@ FROM surf_construite_nino a INNER JOIN surf_nino b
 
 CREATE TABLE surf_construite_snapped AS
 WITH
-parts AS (
+snaps AS (
     SELECT SnapOnNino(geom, 2500, 10) as geom
     FROM surf_construite_t
+),
+parts AS (
+    SELECT (st_dump(geom)).geom
+    FROM snaps
 )
 SELECT row_number() over() AS gid, geom
-FROM parts;
+FROM parts
+WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
 ALTER TABLE surf_construite_snapped
 ADD PRIMARY KEY (gid);

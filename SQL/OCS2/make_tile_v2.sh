@@ -14,7 +14,7 @@ function copy_scripts {
 	ls $SCRIPT_DIR/*.sql |
 	while read f; do
 
-		echo "SET search_path = $SCHEMA, ocs, public;" > $WORKING_DIR/$SCHEMA/$f
+		echo "SET search_path = $SCHEMA, public;" > $WORKING_DIR/$SCHEMA/$f
 		echo "SET client_min_messages TO WARNING;" >> $WORKING_DIR/$SCHEMA/$f
 		echo >> $WORKING_DIR/$SCHEMA/$f
 		cat $f >> $WORKING_DIR/$SCHEMA/$f
@@ -73,14 +73,22 @@ function copy_results {
 
 	psql <<EOF
 
-	-- SET client_min_messages TO WARNING;
+	SET client_min_messages TO WARNING;
+	SET search_path = $SCHEMA, public;
+
+	DELETE FROM ocsv2.simplified
+	WHERE tileid = $TILEID;
+
+	INSERT INTO ocsv2.simplified (tileid, geom, nature)
+	SELECT $TILEID AS tileid, geom, trim(nature)::ocsv2.ocs_nature
+	FROM simplified;
 
 	DELETE FROM ocsv2.carto_clc
 	WHERE tileid = $TILEID;
 
 	INSERT INTO ocsv2.carto_clc (tileid, geom, nature, code_clc)
 	SELECT $TILEID AS tileid, geom, nature, code_clc
-	FROM $SCHEMA.carto_clc;
+	FROM carto_clc;
 
 EOF
 
@@ -94,6 +102,7 @@ setup
 copy_scripts functions
 copy_scripts steps_v2
 copy_scripts postprocess_v2
+copy_scripts finalize
 copy_scripts validation
 
 run_scripts functions

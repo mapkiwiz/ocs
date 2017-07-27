@@ -39,10 +39,9 @@ ADD PRIMARY KEY (gid);
 CREATE TABLE surf_foret_nino AS
 WITH
 intersection AS (
-    SELECT a.gid, coalesce(st_intersection(a.geom, st_union(b.geom)), a.geom) AS geom
+    SELECT a.gid, coalesce(st_intersection(a.geom, b.geom), a.geom) AS geom
     FROM surf_foret a LEFT JOIN surf_nino b
     ON st_intersects(a.geom, b.geom)
-    GROUP BY a.gid
 ),
 parts AS (
     SELECT (st_dump(geom)).geom

@@ -29,7 +29,8 @@ WITH parts AS (
     SELECT 'AUTRE/?' AS nature, geom FROM surf_autre WHERE st_area(geom) >= 5e4
 )
 SELECT row_number() over() AS gid, nature, st_force2d(geom) AS geom
-FROM parts;
+FROM parts
+WHERE ST_GeometryType(geom) = 'ST_Polygon';
 
 ALTER TABLE ocsol
 ADD PRIMARY KEY (gid);

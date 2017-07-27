@@ -1,16 +1,15 @@
 CREATE TABLE carto_clc AS
 WITH
 ocs AS (
-    SELECT a.geom, (a.nature::text)::ocsv2.ocs_nature_clc, b.code_clc
+    SELECT a.geom, b.nature, b.code_clc
     FROM simplified a
-         LEFT JOIN ocsv2.nature_clc b
-         ON a.nature::text = b.nature::text
+    LEFT JOIN ocsv2.nature_clc b ON trim(a.nature) = b.nature::text
     WHERE a.nature NOT IN ('AUTRE/NATURE', 'AUTRE/?')
 ),
 clc AS (
-    SELECT a.geom, (b.nature::text)::ocsv2.ocs_nature_clc, a.code_12 AS code_clc
+    SELECT a.geom, b.nature, a.code_12 AS code_clc
     FROM autre_clc_cleaned a
-         LEFT JOIN ocs.code_clc b
+         LEFT JOIN ocsv2.code_clc b
          ON a.code_12 = b.code_clc
 ),
 ocs_and_clc AS (
