@@ -1,4 +1,4 @@
-CREATE FUNCTION ocsv2.TileStats(tid integer)
+CREATE OR REPLACE FUNCTION ocsv2.TileStats(tid integer)
 RETURNS TABLE (
 	tileid_ integer,
 	dataset text,
@@ -23,7 +23,7 @@ tile_info AS (
     SELECT
         gid AS tileid,
         st_area(geom) AS area
-    FROM grid_ocs
+    FROM ocs.grid_ocs
     WHERE gid = tid
 ),
 raw AS (

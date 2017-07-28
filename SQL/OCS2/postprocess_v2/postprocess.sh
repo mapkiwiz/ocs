@@ -15,7 +15,7 @@ layer=$SCHEMA.ocsol output=ocsol
 
 v.clean $FLAGS input=ocsol tool="break,bpol,rmsa,rmdupl" output=ocsol_cleaned --overwrite
 v.centroids $FLAGS --overwrite input=ocsol_cleaned output=ocsol_filled
-v.to.db $FLAGS ocsol_filled option=cat column=cat
+#v.to.db $FLAGS ocsol_filled option=cat column=cat
 
 v.out.postgis $FLAGS -2 output="PG:dbname=fdca user=postgres host=localhost password=sigibi" \
 type=area in=ocsol_filled output_layer=$SCHEMA.filled

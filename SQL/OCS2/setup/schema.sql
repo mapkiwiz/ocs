@@ -8,6 +8,9 @@ CREATE TABLE ocs.grid_ocs (
     boundary boolean default false
 );
 
+CREATE INDEX grid_ocs_geom_idx
+ON ocs.grid_ocs using gist (geom) ;
+
 CREATE TYPE ocs_nature AS ENUM (
     'AUTRE/?', 
     'AUTRE/NATURE', 

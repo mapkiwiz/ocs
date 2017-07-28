@@ -11,20 +11,24 @@ function tiles {
 
 	psql -At -F " " <<EOF
 WITH
-groups AS (
-	SELECT gid AS tileid, (gid % 8) AS gr FROM ocs.grid_ocs
-	WHERE dept IN ('SAVOIE', 'HAUTE-SAVOIE')
+rows AS (
+	SELECT gid AS tileid, row_number() over() AS rowid FROM ocs.grid_ocs
+	-- WHERE dept IN ('CANTAL', 'DROME')
+	WHERE NOT EXISTS (
+		SELECT gid
+		FROM ocsv2.carto_clc
+		WHERE tileid = grid_ocs.gid
+		LIMIT 1
+	)
 	ORDER BY dept, random()
+),
+groups AS (
+	SELECT tileid, (rowid % 8) AS gr
+	FROM rows
 ),
 tiles AS (
 	SELECT tileid FROM groups
 	WHERE gr = $GROUP
-	AND NOT EXISTS (
-		SELECT gid
-		FROM ocsv2.carto_clc
-		WHERE tileid = groups.tileid
-		LIMIT 1
-	)
 )
 SELECT row_number() over() AS i, (SELECT count(*) FROM tiles) AS n, tileid
 FROM tiles;
