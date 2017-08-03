@@ -7,14 +7,9 @@ function create_view {
  
     psql <<EOF
 
-        CREATE OR REPLACE VIEW ocs_cleaned.carto_$DEPNO as
-        SELECT a.*
-        FROM ocs.carto a inner join ocs.grid_ocs b on b.gid = a.tileid
-        WHERE b.dept = '$DEPNAME';
-
         CREATE OR REPLACE VIEW ocs_final.carto_$DEPNO as
         SELECT a.*
-        FROM ocs.carto_clc a inner join ocs.grid_ocs b on b.gid = a.tileid
+        FROM ocsv2.carto_clc a inner join ocs.grid_ocs b on b.gid = a.tileid
         WHERE b.dept = '$DEPNAME';
 
 EOF
@@ -27,7 +22,7 @@ while read name no; do
 
 done <<EOF
 AIN 001
-ALLIER 002
+ALLIER 003
 ARDECHE 007
 CANTAL 015
 DROME 026

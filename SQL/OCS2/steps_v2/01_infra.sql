@@ -41,7 +41,7 @@ grid AS (
     WHERE gid = 1
 ),
 diff AS (
-    SELECT st_difference((SELECT geom FROM grid), st_union(geom)) AS geom
+    SELECT COALESCE(st_difference((SELECT geom FROM grid), st_union(geom)), (SELECT geom FROM grid)) AS geom
     FROM surf_infra
     -- WHERE ...
 ),

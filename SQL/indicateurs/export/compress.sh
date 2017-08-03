@@ -1,0 +1,46 @@
+#!/bin/bash
+
+OUTPUT_DIR=/mnt/data/FCAURA/PRODUCTION/INDICATEURS
+
+function compress_aura {
+
+	CURRENT_DIR=$(pwd)
+
+	cd $OUTPUT_DIR
+	7zr a $OUTPUT_DIR/INDICATEURS_AURA.7z AURA/*
+	cd $CURRENT_DIR
+
+}
+
+function compress_folder {
+
+	NAME=$1
+	NO=$2
+	CURRENT_DIR=$(pwd)
+
+	cd $OUTPUT_DIR/DEPARTEMENTS
+	7zr a $OUTPUT_DIR/INDICATEURS_$NO.7z $NAME/*
+	cd $CURRENT_DIR
+
+}
+
+compress_aura
+
+while read NAME NO; do
+	
+	compress_folder $NAME $NO
+
+done <<EOF
+AIN 001
+ALLIER 003
+ARDECHE 007
+CANTAL 015
+DROME 026
+HAUTE-LOIRE 043
+HAUTE-SAVOIE 074
+ISERE 038
+LOIRE 042
+PUY-DE-DOME 063
+RHONE 069
+SAVOIE 073
+EOF
